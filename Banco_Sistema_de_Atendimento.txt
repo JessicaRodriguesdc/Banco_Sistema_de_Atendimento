@@ -1,0 +1,78 @@
+CREATE DATABASE Sistema_de_Atendimento;
+USE Sistema_de_Atendimento;
+-- TABELAS
+CREATE TABLE Empresa(
+	idEmpresa INT NOT NULL,
+	data_hora datetime,
+    nome TEXT,
+	Email VARCHAR(255)
+);
+CREATE TABLE Usuario(
+	idUsuario INT NOT NULL,
+	nome TEXT,
+	Email VARCHAR(255),
+	data_hora datetime,
+	idEmpresa INT NOT NULL
+);
+CREATE TABLE Atendimento(
+	idAtendimento INT NOT NULL,
+	data_hora datetime,
+	qtd_de_pecas INT,
+	valor double,
+	idUsuario INT NOT NULL
+);
+-- PRIMARY KEYS
+ALTER TABLE Empresa
+	ADD CONSTRAINT PK_idEmpresa
+	PRIMARY KEY(idEmpresa);
+
+ALTER TABLE Usuario
+	ADD CONSTRAINT PK_idUsuario
+	PRIMARY KEY(idUsuario);
+
+ALTER TABLE Atendimento
+	ADD CONSTRAINT PK_idAtendimento
+	PRIMARY KEY(idAtendimento);
+
+-- FOREIGN KEY
+ALTER TABLE Usuario
+	ADD CONSTRAINT FK_idEmpresa
+	FOREIGN KEY(idEmpresa)
+		REFERENCES Empresa(idEmpresa);
+
+ALTER TABLE Atendimento
+	ADD CONSTRAINT FK_idUsuario
+	FOREIGN KEY(idUsuario)
+		REFERENCES Usuario(idUsuario);
+
+-- INSERINDO VALORES
+insert into Empresa(idEmpresa,data_hora,nome,Email)
+	values 	(1,20190816100645,'Carli','carli@gmail.com'),
+			(2,20180524152201,'Zas','zas@gmail.com'),
+            (3,20190818235959,'ruam','ruam@gmail.com'),
+            (4,20191018180437,'Costa','costa@gmail.com'),
+            (5,20191018120900,'Luny','luny@gmail.com')
+            
+insert into Usuario(idUsuario,nome,Email,data_hora,idEmpresa)
+	values 	(1,'Jessica','jessica@gmail.com',20190816234545,5),
+			(2,'Ricardo','ricardo@gmail.com',20190914052201,4),
+            (3,'Emily','emily@gmail.com',20191118132900,1),
+            (4,'Victoria','victoria@gmail.com',20191018180437,1),
+            (5,'Emanual','emanuel@gmail.com',20170101000000,5)
+            
+insert into Atendimento(idAtendimento,data_hora,qtd_de_pecas,valor,idUsuario)
+	values 	(1,20190817000000,18,400.00,1),
+			(2,20180524152201,8,80.00,3),
+            (3,20190818235959,4,40.00,4),
+            (4,20191018180437,10,100.00,2),
+            (5,20191018120900,16,350.00,5)
+
+-- QUERY
+SELECT 
+	e.nome AS Nome_Empresa,u.nome AS Nome_Usuario ,a.data_hora AS Data_Hora_Atendomento ,a.valor AS Valor_Atendimento
+FROM Usuario as u
+	INNER JOIN Empresa as e
+		on u.idEmpresa = e.idEmpresa
+	INNER JOIN Atendimento as a
+		on u.idUsuario = a.idUsuario
+ORDER BY a.data_hora ASC
